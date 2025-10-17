@@ -289,6 +289,12 @@ public class StudentAttendanceService {
 
 			// 更新用エンティティ作成
 			TStudentAttendance tStudentAttendance = new TStudentAttendance();
+			//Task.26開始　入力された「時」「分」を連結して出退勤時間に代入する
+			if(dailyAttendanceForm.getTrainingStartTimeHour() != null && dailyAttendanceForm.getTrainingStartTimeMinute() != null)
+			dailyAttendanceForm.setTrainingStartTime(dailyAttendanceForm.getTrainingStartTimeHour() + ":" + dailyAttendanceForm.getTrainingStartTimeMinute());;
+			if(dailyAttendanceForm.getTrainingEndTimeHour() != null && dailyAttendanceForm.getTrainingEndTimeMinute() != null)
+				dailyAttendanceForm.setTrainingEndTime(dailyAttendanceForm.getTrainingEndTimeHour() + ":" + dailyAttendanceForm.getTrainingEndTimeMinute());
+			//Task.26終了
 			// 日次勤怠フォームから更新用のエンティティにコピー
 			BeanUtils.copyProperties(dailyAttendanceForm, tStudentAttendance);
 			// 研修日付

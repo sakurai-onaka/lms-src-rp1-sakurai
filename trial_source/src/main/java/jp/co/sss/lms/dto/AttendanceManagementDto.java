@@ -17,6 +17,12 @@ public class AttendanceManagementDto extends StudentAttendanceDto {
 
 	/** 当日フラグ */
 	private Boolean isToday;
+	/** Task.26 **/
+	/** 時(文字列) */
+	private String hourTimeValue;
+	/** 分(文字列) */
+	private String minuteTimeValue;
+	/** Task.26 */
 	/** 中抜け時間（文字列） */
 	private String blankTimeValue;
 	/** セクション名 */

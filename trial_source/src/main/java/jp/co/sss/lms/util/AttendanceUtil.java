@@ -149,6 +149,10 @@ public class AttendanceUtil {
 		}
 		for (int i = 0; i < num; i++) {
 			String time = String.valueOf(i);
+			//数字が一桁の場合は先頭に0を付与する 例:"0"→"00"
+			if(i<10) {
+				time = "0" + time;
+			}
 			map.put(i, time);
 		}
 		return map;
