@@ -47,6 +47,9 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
+		// Task.25 過去日未入力チェック
+		boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
+		model.addAttribute("noInputPastDaysFlg",noInputPastDaysFlg);		
 		return "attendance/detail";
 	}
 

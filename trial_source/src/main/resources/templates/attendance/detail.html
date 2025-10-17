@@ -6,7 +6,7 @@
 <title>勤怠情報変更｜LMS</title>
 </head>
 <body>
-
+	
 	<!-- 完了メッセージ -->
 	<th:block th:if="${not #strings.isEmpty(message)}" id="message">
 		<div class="alert alert-info alert-dismissible fade in" role="alert">
@@ -87,6 +87,18 @@
 			return hours + ':' + minutes;
 		}
 	</script>
+	<!--Task.25 -->
+	<form>
+		<input type = "hidden" th:value="${noInputPastDaysFlg}" id="no_input_past_days_flg">
+			<script>
+				let flg = document.getElementById("no_input_past_days_flg").value
+				if(flg === 'true'){
+					let msg = '過去日の勤怠に未入力があります。';
+    				window.alert(msg);
+    			}
+ 			</script>
+		</input>
+	</form>
 
 </body>
 </html>

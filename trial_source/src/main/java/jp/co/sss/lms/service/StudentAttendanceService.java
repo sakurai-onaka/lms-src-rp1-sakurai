@@ -218,8 +218,12 @@ public class StudentAttendanceService {
 		attendanceForm.setLmsUserId(loginUserDto.getLmsUserId());
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
+		//Task.26追加機能　開始
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
-
+		attendanceForm.setHourTimes(attendanceUtil.setTime(true));
+		attendanceForm.setMinuteTimes(attendanceUtil.setTime(false));
+		//Task.26追加機能　終了
+		
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
 			attendanceForm
@@ -238,6 +242,12 @@ public class StudentAttendanceService {
 			dailyAttendanceForm
 					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
+			//Task.26追加　開始
+			dailyAttendanceForm.setTrainingStartTimeHour(attendanceUtil.outTime(attendanceManagementDto.getTrainingStartTime(),true));
+			dailyAttendanceForm.setTrainingStartTimeMinute(attendanceUtil.outTime(attendanceManagementDto.getTrainingStartTime(),false));
+			dailyAttendanceForm.setTrainingEndTimeHour(attendanceUtil.outTime(attendanceManagementDto.getTrainingEndTime(),true));
+			dailyAttendanceForm.setTrainingEndTimeMinute(attendanceUtil.outTime(attendanceManagementDto.getTrainingEndTime(),false));
+			//Task.26　終了
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
@@ -333,5 +343,21 @@ public class StudentAttendanceService {
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
+	
+	/**
+	 * Task.25追加処理
+	 * 過去日の未入力チェック
+	 * @return 過去日未入力判定結果
+	 */
+	public boolean pastDaysCheck() {
+		Date trainingDate = attendanceUtil.getTrainingDate();
+		if (loginUserUtil.isStudent()) {
+			Integer notInputAttDateConut = tStudentAttendanceMapper.count(loginUserDto.getLmsUserId(),Constants.DB_FLG_FALSE, trainingDate);
+			if(notInputAttDateConut > 0) {
+				return true;
+			}
+		}
 
+		return false;
+	}
 }

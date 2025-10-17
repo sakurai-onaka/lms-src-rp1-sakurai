@@ -86,4 +86,21 @@
 		WHERE student_attendance_id = #{studentAttendanceId}
 	</update>
 
+	<!-- Task.25 -->
+	<select id="count" resultType="Integer">
+		SELECT
+ 			count(*)
+		FROM    
+    		(SELECT 
+        		*
+    		FROM
+        		t_student_attendance
+			WHERE lms_user_id = #{lmsUserId}
+				AND training_date <![CDATA[ < ]]> #{trainingDate}
+				AND delete_flg = #{deleteFlg})t1
+		WHERE
+    		t1.training_start_time = ''
+    		OR t1.training_end_time = ''
+	</select>
+
 </mapper>

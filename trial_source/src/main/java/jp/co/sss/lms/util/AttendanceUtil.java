@@ -133,6 +133,56 @@ public class AttendanceUtil {
 	}
 
 	/**
+	 * Task.26
+	 * 勤怠管理画面「時」もしくは「分」取得
+	 * @param numberType true 時 false 分
+	 * @return 「時」
+	 */
+	public LinkedHashMap<Integer, String> setTime(boolean numberType) {
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		int num;
+		if(numberType == true) {
+			num = 24;
+		}else {
+			num = 60;
+		}
+		for (int i = 0; i < num; i++) {
+			String time = String.valueOf(i);
+			map.put(i, time);
+		}
+		return map;
+	}
+
+	/**
+	 * Task.26
+	 * 出退勤時間を元に「時」「分」を出力する。
+	 * @param trainingTime 時刻
+	 * @param numberType true 時 false 分
+	 * @return 抽出した「時」もしくは「分」
+	 */
+	public Integer outTime(String trainingTime,boolean numberType) {
+		Integer time;
+		if(!trainingTime.equals("")) {
+			int index = trainingTime.indexOf(":");
+			String str = trainingTime.substring(index+1);
+			if(numberType == true) {
+				str = trainingTime.substring(0,index);
+			}else {
+				str = trainingTime.substring(index+1);
+			}
+		
+			if(str.startsWith("0")) {
+				str = str.substring(1);
+			}
+				time = Integer.parseInt(str);
+		}else {
+			time = null;
+		}
+		return time;
+	}
+	
+	/**
 	 * 研修日の判定
 	 * 
 	 * @param courseId
