@@ -47,9 +47,9 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-		// Task.25 過去日未入力チェック
+		// 櫻井宝生 – Task.25　
 		boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
-		model.addAttribute("noInputPastDaysFlg",noInputPastDaysFlg);		
+		model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
 		return "attendance/detail";
 	}
 
@@ -136,9 +136,14 @@ public class AttendanceController {
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
 
-		// 更新
-		String message = studentAttendanceService.update(attendanceForm);
-		model.addAttribute("message", message);
+		//Task.27 更新前のチェック
+		String error = studentAttendanceService.inputCheck(attendanceForm);
+		model.addAttribute("error", error);
+		if (error == null) {
+			// 更新
+			String message = studentAttendanceService.update(attendanceForm);
+			model.addAttribute("message", message);
+		}
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());

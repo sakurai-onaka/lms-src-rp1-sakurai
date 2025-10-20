@@ -67,12 +67,12 @@ public interface TStudentAttendanceMapper {
 
 
 	/**
-	 * Task.25
 	 * 勤怠情報（受講生入力）未入力件数取得
 	 * @param lmsUserId
 	 * @param deleteFlg
 	 * @param trainingDate
 	 * @return 未入力件数
+	 * @author 製造太郎  – Task.25
 	 */
 	Integer count(@Param("lmsUserId") Integer lmsUserId,
 			@Param("deleteFlg") Short deleteFlg,@Param("trainingDate") Date trainingDate);

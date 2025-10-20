@@ -142,15 +142,15 @@ public class AttendanceUtil {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 		map.put(null, "");
 		int num;
-		if(numberType == true) {
+		if (numberType == true) {
 			num = 24;
-		}else {
+		} else {
 			num = 60;
 		}
 		for (int i = 0; i < num; i++) {
 			String time = String.valueOf(i);
 			//数字が一桁の場合は先頭に0を付与する 例:"0"→"00"
-			if(i<10) {
+			if (i < 10) {
 				time = "0" + time;
 			}
 			map.put(i, time);
@@ -165,27 +165,27 @@ public class AttendanceUtil {
 	 * @param numberType true 時 false 分
 	 * @return 抽出した「時」もしくは「分」
 	 */
-	public Integer outTime(String trainingTime,boolean numberType) {
+	public Integer outTime(String trainingTime, boolean numberType) {
 		Integer time;
-		if(!trainingTime.equals("")) {
+		if (!trainingTime.equals("")) {
 			int index = trainingTime.indexOf(":");
-			String str = trainingTime.substring(index+1);
-			if(numberType == true) {
-				str = trainingTime.substring(0,index);
-			}else {
-				str = trainingTime.substring(index+1);
+			String str = trainingTime.substring(index + 1);
+			if (numberType == true) {
+				str = trainingTime.substring(0, index);
+			} else {
+				str = trainingTime.substring(index + 1);
 			}
-		
-			if(str.startsWith("0")) {
+
+			if (str.startsWith("0")) {
 				str = str.substring(1);
 			}
-				time = Integer.parseInt(str);
-		}else {
+			time = Integer.parseInt(str);
+		} else {
 			time = null;
 		}
 		return time;
 	}
-	
+
 	/**
 	 * 研修日の判定
 	 * 
@@ -199,6 +199,38 @@ public class AttendanceUtil {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Task.27
+	 * 中抜け時間取得(時、分)
+	 * @param numberType true 時 false 分
+	 * @return 休憩時間
+	 */
+	public Integer getBlankTime(Integer blankTime, boolean numberType) {
+		int time = 0;
+		if (numberType == true) {
+			//中抜け時間の時を算出
+			while (blankTime > 0) {
+				if (blankTime >= 60) {
+					time += 1;
+					blankTime -= 60;
+				} else {
+					blankTime -= blankTime;
+				}
+			}
+		} else {
+			//中抜け時間の分を算出
+			while (blankTime > 0) {
+				if (blankTime >= 60) {
+					blankTime -= 60;
+				} else {
+					time += blankTime;
+					blankTime -= blankTime;
+				}
+			}
+		}
+		return time;
 	}
 
 }
