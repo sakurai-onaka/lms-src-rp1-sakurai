@@ -42,14 +42,14 @@ public class AttendanceController {
 	@RequestMapping(path = "/detail", method = RequestMethod.GET)
 	public String index(Model model) {
 
+		// 櫻井宝生 – Task.25　
+		boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
+		model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
+
 		// 勤怠一覧の取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
-
-		// 櫻井宝生 – Task.25　
-		boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
-		model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
 		return "attendance/detail";
 	}
 
@@ -137,9 +137,9 @@ public class AttendanceController {
 			throws ParseException {
 
 		//Task.27 更新前のチェック
-		String error = studentAttendanceService.inputCheck(attendanceForm);
-		model.addAttribute("error", error);
-		if (error == null) {
+		List<String> errors = studentAttendanceService.inputCheck(attendanceForm);
+		model.addAttribute("errors", errors);
+		if (errors.size() == 0) {
 			// 更新
 			String message = studentAttendanceService.update(attendanceForm);
 			model.addAttribute("message", message);
@@ -147,9 +147,19 @@ public class AttendanceController {
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
-		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
+		if (errors.size() == 0) {
+			model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-		return "attendance/detail";
+			return "attendance/detail";
+		} else {
+			// 勤怠フォームの生成
+			attendanceForm = studentAttendanceService
+					.setAttendanceForm(attendanceManagementDtoList);
+			model.addAttribute("attendanceForm", attendanceForm);
+
+			return "attendance/update";
+		}
+
 	}
 
 }

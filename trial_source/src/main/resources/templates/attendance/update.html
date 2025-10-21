@@ -11,6 +11,13 @@
 		<h2>勤怠管理</h2>
 	</th:block>
 
+	<!--櫻井宝生 – Task.27 start-->
+	<th:block  th:each="error:${errors}" th:if="${not #strings.isEmpty(error)}" id="error">
+		<ul style="padding-left: 0; list-style: none;">
+			<li><span th:text="'*' + '&nbsp' + ${error}" class="help-inline error"></span></li>
+		</ul>
+	</th:block>
+	<!--櫻井宝生 – Task.27 end-->
 	<th:block th:if="${session.loginUserDto.role != '0001'}">
 		<h2>勤怠管理 <small>( [[${attendanceForm.userName}]] )</small></h2>
 		<th:block th:if="${session.loginUserDto.leaveFlg == '1'}">
@@ -20,7 +27,7 @@
 
 	<div class="row">
 		<div class="bs-component col-sm-12">
-			<form th:action="@{/attendance/update}" method="post">
+			<form th:action="@{/attendance/update}" method="post" onsubmit="return checkUpdate()">
 				<div>
 				<table class="table table-hover dataTable no-footer">
 					<thead style="display: block;">
@@ -110,7 +117,13 @@
 					<th:block th:if="${session.loginUserDto.role != '0001'}">
 						<input type="submit" value="戻る" name="indexCompany" class="btn btn-default" />
 					</th:block>
-					<input type="submit" value="更新" name="complete" class="btn btn-info" />
+					<input type="submit" value="更新" name="complete" class="btn btn-info"/>
+					<script>
+						function checkUpdate(){
+							var res = confirm("更新します。よろしいですか?");
+							return res;
+						}
+					</script>
 				</div>
 
 			</form>

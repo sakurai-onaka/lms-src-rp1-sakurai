@@ -383,26 +383,27 @@ public class StudentAttendanceService {
 	 * 入力チェック
 	 * @return エラーメッセージ
 	 */
-	public String inputCheck(AttendanceForm attendanceForm) {
+	public List<String> inputCheck(AttendanceForm attendanceForm) {
 		//該当の勤怠リスト[n]のnの部分
 		int n = 0;
+		List<String> errors = new ArrayList<>();
 		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
 			n++;
 			if (dailyAttendanceForm.getNote().length() > 100) {
-				return messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH, new String[] { "備考", "100" });
+				errors.add(messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH, new String[] { "備考", "100" }));
 			}
 			if (dailyAttendanceForm.getTrainingStartTimeHour() != null
 					|| dailyAttendanceForm.getTrainingStartTimeMinute() != null) {
 				if (!(dailyAttendanceForm.getTrainingStartTimeHour() != null
 						&& dailyAttendanceForm.getTrainingStartTimeMinute() != null)) {
-					return messageUtil.getMessage(Constants.INPUT_INVALID, new String[] { "出勤時間" });
+					errors.add(messageUtil.getMessage(Constants.INPUT_INVALID, new String[] { "出勤時間" }));
 				}
 			}
 			if (dailyAttendanceForm.getTrainingEndTimeHour() != null
 					|| dailyAttendanceForm.getTrainingEndTimeMinute() != null) {
 				if (!(dailyAttendanceForm.getTrainingEndTimeHour() != null
 						&& dailyAttendanceForm.getTrainingEndTimeMinute() != null)) {
-					return messageUtil.getMessage(Constants.INPUT_INVALID, new String[] { "退勤時間" });
+					errors.add(messageUtil.getMessage(Constants.INPUT_INVALID, new String[] { "退勤時間" }));
 				}
 			}
 			//出勤時間に入力なし＆退勤時間に入力あり
@@ -410,7 +411,7 @@ public class StudentAttendanceService {
 					|| dailyAttendanceForm.getTrainingStartTimeMinute() == null) {
 				if (dailyAttendanceForm.getTrainingEndTimeHour() != null
 						|| dailyAttendanceForm.getTrainingEndTimeMinute() != null) {
-					return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
+					errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY));
 				}
 			}
 			//出勤時間 > 退勤時間の場合
@@ -426,8 +427,8 @@ public class StudentAttendanceService {
 						dailyAttendanceForm.getTrainingEndTimeHour(),
 						dailyAttendanceForm.getTrainingEndTimeMinute());
 				if (dateTimeStart.isAfter(dateTimeEnd)) {
-					return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
-							new String[] { String.valueOf(n) });
+					errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
+							new String[] { String.valueOf(n) }));
 				}
 			}
 			//中抜け時間が勤務時間を超えるかチェック
@@ -447,10 +448,10 @@ public class StudentAttendanceService {
 				LocalDateTime dateTimeBlank = LocalDateTime.of(2000, 10, 1, blankTimeHour, blankTimeMinute);
 				//中抜け時間と比較
 				if (dateTimeBlank.isAfter(dateTimeEnd)) {
-					return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR);
+					errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
 				}
 			}
 		}
-		return null;
+		return errors;
 	}
 }
