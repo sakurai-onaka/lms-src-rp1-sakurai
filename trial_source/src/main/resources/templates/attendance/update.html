@@ -32,18 +32,18 @@
 				<table class="table table-hover dataTable no-footer">
 					<thead style="display: block;">
 						<tr>
-							<th class="w140">日付</th>
-							<th class="w150">コース内容</th>
-							<th class="w180">出勤</th>
-							<th class="w180">退勤</th>
-							<th class="w90">中抜け時間</th>
-							<th class="w70">ステータス</th>
+							<th class="w160 w10">日付</th>
+							<th class="w260">コース内容</th>
+							<th class="w220">出勤</th>
+							<th class="w220">退勤</th>
+							<th class="w100">中抜け時間</th>
+							<th class="w100">ステータス</th>
 							<th class="w200">備考</th>
 						</tr>
 					</thead>
 					<tbody style="display: block; overflow-y:auto;height:270px; scrollbar-color:#c0c0c0 #f1f1f1;">
 						<th:block th:each="dailyAttendanceForm, stat : *{attendanceForm.attendanceList}">
-							<tr>
+							<tr th:data-index="${stat.index}">
 								<th:block>
 									<input type="hidden" th:name="|attendanceList[${stat.index}].isToday|" th:value="${dailyAttendanceForm.isToday}" />
 									<input type="hidden" th:name="|attendanceList[${stat.index}].studentAttendanceId|" th:value="${dailyAttendanceForm.studentAttendanceId}" />
@@ -54,6 +54,8 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w140">[[${dailyAttendanceForm.sectionName}]]</td>
+								<!--櫻井宝生 Task.26　開始-->
+								<td class="w50"><button type="button" th:value="${stat.index}" onclick="setTime(this)" class="btn btn-success default-button">定時</button></td>
 								<!--
 								<td class="w70">
 									<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"
@@ -64,9 +66,9 @@
 									th:value="${dailyAttendanceForm.trainingEndTime}" class="form-control" />
 								</td>
 								-->
-								<!--Task.26　開始-->
+								<!--櫻井宝生 Task.26　開始-->
 								<td class="w70">
-									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|" class="form-control">
+									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|" th:id="startTimeHour+${stat.index}" class="form-control">
 										<option th:each="hourTime : ${attendanceForm.hourTimes}" th:value="${hourTime.key}" th:inlne="text" class="form-control" 
 											th:selected="${hourTime.key == dailyAttendanceForm.trainingStartTimeHour}">[[${hourTime.value}]]</option>
 									</select>
@@ -74,13 +76,13 @@
 								<td class="w10">:
 								</td>
 								<td class="w70">
-									<select th:name="|attendanceList[${stat.index}].trainingStartTimeMinute|" class="form-control">
+									<select th:name="|attendanceList[${stat.index}].trainingStartTimeMinute|" th:id="startTimeMinute+${stat.index}" class="form-control">
 										<option th:each="minuteTime : ${attendanceForm.minuteTimes}" th:value="${minuteTime.key}" th:inlne="text" class="form-control" 
 											th:selected="${minuteTime.key == dailyAttendanceForm.trainingStartTimeMinute}">[[${minuteTime.value}]]</option>
 									</select>
 								</td>
 								<td class="w70">
-									<select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|" class="form-control">
+									<select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|" th:id="endTimeHour+${stat.index}" class="form-control">
 										<option th:each="hourTime : ${attendanceForm.hourTimes}" th:value="${hourTime.key}" th:inlne="text" class="form-control" 
 											th:selected="${hourTime.key == dailyAttendanceForm.trainingEndTimeHour}">[[${hourTime.value}]]</option>
 									</select>
@@ -88,7 +90,7 @@
 								<td class="w10">:
 								</td>
 								<td class="w70">
-									<select th:name="|attendanceList[${stat.index}].trainingEndTimeMinute|" class="form-control">
+									<select th:name="|attendanceList[${stat.index}].trainingEndTimeMinute|" th:id="endTimeMinute+${stat.index}" class="form-control">
 										<option th:each="minuteTime : ${attendanceForm.minuteTimes}" th:value="${minuteTime.key}" th:inlne="text" class="form-control" 
 											th:selected="${minuteTime.key == dailyAttendanceForm.trainingEndTimeMinute}">[[${minuteTime.value}]]</option>
 									</select>
@@ -122,6 +124,20 @@
 						function checkUpdate(){
 							var res = confirm("更新します。よろしいですか?");
 							return res;
+						}
+						function setTime(button){
+							var getNum = button.closest('tr').getAttribute('data-index');
+							var getTime = document.getElementById("startTimeHour"+getNum);
+							getTime.value = 9;
+							var getNum = button.closest('tr').getAttribute('data-index');
+							var getTime = document.getElementById("startTimeMinute"+getNum);
+							getTime.value = 0;
+							var getNum = button.closest('tr').getAttribute('data-index');
+							var getTime = document.getElementById("endTimeHour"+getNum);
+							getTime.value = 18;
+							var getNum = button.closest('tr').getAttribute('data-index');
+							var getTime = document.getElementById("endTimeMinute"+getNum);
+							getTime.value = 0;
 						}
 					</script>
 				</div>
