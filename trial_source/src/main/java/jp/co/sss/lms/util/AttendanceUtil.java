@@ -133,20 +133,14 @@ public class AttendanceUtil {
 	}
 
 	/**
-	 * Task.26
-	 * 勤怠管理画面「時」もしくは「分」取得
-	 * @param numberType true 時 false 分
+	 * 勤怠管理画面「時」取得
 	 * @return 「時」
+	 * @author 櫻井宝生 - Task.26
 	 */
-	public LinkedHashMap<Integer, String> setTime(boolean numberType) {
+	public LinkedHashMap<Integer, String> getHourMap() {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 		map.put(null, "");
-		int num;
-		if (numberType == true) {
-			num = 24;
-		} else {
-			num = 60;
-		}
+		int num = 24;
 		for (int i = 0; i < num; i++) {
 			String time = String.valueOf(i);
 			//数字が一桁の場合は先頭に0を付与する 例:"0"→"00"
@@ -159,22 +153,60 @@ public class AttendanceUtil {
 	}
 
 	/**
-	 * Task.26
+	 * 勤怠管理画面「分」取得
+	 * @return 「分」
+	 * @author 櫻井宝生 - Task.26
+	 */
+	public LinkedHashMap<Integer, String> getMinuteMap() {
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		int num = 60;
+		for (int i = 0; i < num; i++) {
+			String time = String.valueOf(i);
+			//数字が一桁の場合は先頭に0を付与する 例:"0"→"00"
+			if (i < 10) {
+				time = "0" + time;
+			}
+			map.put(i, time);
+		}
+		return map;
+	}
+
+	/**
 	 * 出退勤時間を元に「時」「分」を出力する。
 	 * @param trainingTime 時刻
 	 * @param numberType true 時 false 分
 	 * @return 抽出した「時」もしくは「分」
+	 * @author 櫻井宝生 - Task.26
 	 */
-	public Integer outTime(String trainingTime, boolean numberType) {
+	public Integer getHour(String trainingTime) {
+		Integer time;
+		if (!trainingTime.equals("")) {
+			int index = trainingTime.indexOf(":");
+			String str = trainingTime.substring(0, index);
+
+			if (str.startsWith("0")) {
+				str = str.substring(1);
+			}
+			time = Integer.parseInt(str);
+		} else {
+			time = null;
+		}
+		return time;
+	}
+
+	/**
+	 * 出退勤時間を元に「時」「分」を出力する。
+	 * @param trainingTime 時刻
+	 * @param numberType true 時 false 分
+	 * @return 抽出した「時」もしくは「分」
+	 * @author 櫻井宝生 - Task.26
+	 */
+	public Integer getMinute(String trainingTime) {
 		Integer time;
 		if (!trainingTime.equals("")) {
 			int index = trainingTime.indexOf(":");
 			String str = trainingTime.substring(index + 1);
-			if (numberType == true) {
-				str = trainingTime.substring(0, index);
-			} else {
-				str = trainingTime.substring(index + 1);
-			}
 
 			if (str.startsWith("0")) {
 				str = str.substring(1);
@@ -200,37 +232,38 @@ public class AttendanceUtil {
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Task.27
-	 * 中抜け時間取得(時、分)
-	 * @param numberType true 時 false 分
-	 * @return 休憩時間
+	 * 受講時間数を算出
+	 * @param startTrainingTime
+	 * @param endTrainingTime
+	 * @return TrainingTime
+	 * @author 櫻井宝生 - Task.27
 	 */
-	public Integer getBlankTime(Integer blankTime, boolean numberType) {
-		int time = 0;
-		if (numberType == true) {
-			//中抜け時間の時を算出
-			while (blankTime > 0) {
-				if (blankTime >= 60) {
-					time += 1;
-					blankTime -= 60;
-				} else {
-					blankTime -= blankTime;
-				}
-			}
-		} else {
-			//中抜け時間の分を算出
-			while (blankTime > 0) {
-				if (blankTime >= 60) {
-					blankTime -= 60;
-				} else {
-					time += blankTime;
-					blankTime -= blankTime;
-				}
+	public TrainingTime calcJukoTime(TrainingTime startTrainingTime, TrainingTime endTrainingTime) {
+		//出退勤合計分取得
+		Integer startTotalMinute = startTrainingTime.getHour() * 60;
+		startTotalMinute = startTotalMinute + startTrainingTime.getMinute();
+		Integer EndTotalMinute = endTrainingTime.getHour() * 60;
+		EndTotalMinute = EndTotalMinute + endTrainingTime.getMinute();
+		Integer totalMinute = EndTotalMinute - startTotalMinute;
+		if (totalMinute < 0) {
+			return null;
+		} else if (totalMinute > 1440) {
+			return null;
+		}
+		Integer hour = 0;
+		Integer minute = 0;
+		while (totalMinute > 0) {
+			if (totalMinute >= 60) {
+				hour += 1;
+				totalMinute -= 60;
+			} else {
+				minute += totalMinute;
+				totalMinute -= totalMinute;
 			}
 		}
-		return time;
-	}
+		return new TrainingTime(hour,minute);
 
+	}
 }

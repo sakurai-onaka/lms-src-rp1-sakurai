@@ -136,7 +136,7 @@ public class AttendanceController {
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
 
-		//Task.27 更新前のチェック
+		//櫻井宝生 - Task.27 更新前のチェック
 		List<String> errors = studentAttendanceService.inputCheck(attendanceForm);
 		model.addAttribute("errors", errors);
 		if (errors.size() == 0) {

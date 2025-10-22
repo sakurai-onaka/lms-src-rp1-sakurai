@@ -74,7 +74,7 @@ public interface TStudentAttendanceMapper {
 	 * @return 未入力件数
 	 * @author 櫻井宝生  – Task.25
 	 */
-	Integer count(@Param("lmsUserId") Integer lmsUserId,
+	Integer notEnterCount(@Param("lmsUserId") Integer lmsUserId,
 			@Param("deleteFlg") Short deleteFlg,@Param("trainingDate") Date trainingDate);
 	
 }

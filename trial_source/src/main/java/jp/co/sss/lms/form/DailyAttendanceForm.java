@@ -20,7 +20,7 @@ public class DailyAttendanceForm {
 	private String trainingStartTime;
 	/** 退勤時間 */
 	private String trainingEndTime;
-	/**Task.26* 開始/
+	/**櫻井宝生 - Task.26* 開始/
 	/**出勤(時)*/
 	private Integer trainingStartTimeHour;
 	/**出勤(分)*/
@@ -29,7 +29,7 @@ public class DailyAttendanceForm {
 	private Integer trainingEndTimeHour;
 	/**退勤(分)*/
 	private Integer trainingEndTimeMinute;
-	/**Task.26* 終了/
+	/**櫻井宝生 - Task.26* 終了/
 	/** 中抜け時間 */
 	private Integer blankTime;
 	/** 中抜け時間（画面表示用） */

@@ -11,13 +11,13 @@
 		<h2>勤怠管理</h2>
 	</th:block>
 
-	<!--櫻井宝生 – Task.27 start-->
+	<!--櫻井宝生 – Task.27 開始-->
 	<th:block  th:each="error:${errors}" th:if="${not #strings.isEmpty(error)}" id="error">
 		<ul style="padding-left: 0; list-style: none;">
 			<li><span th:text="'*' + '&nbsp' + ${error}" class="help-inline error"></span></li>
 		</ul>
 	</th:block>
-	<!--櫻井宝生 – Task.27 end-->
+	<!--櫻井宝生 – Task.27 終了-->
 	<th:block th:if="${session.loginUserDto.role != '0001'}">
 		<h2>勤怠管理 <small>( [[${attendanceForm.userName}]] )</small></h2>
 		<th:block th:if="${session.loginUserDto.leaveFlg == '1'}">
@@ -54,8 +54,9 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w140">[[${dailyAttendanceForm.sectionName}]]</td>
-								<!--櫻井宝生 Task.26　開始-->
+								<!--櫻井宝生 Task.28　開始-->
 								<td class="w50"><button type="button" th:value="${stat.index}" onclick="setTime(this)" class="btn btn-success default-button">定時</button></td>
+								<!--櫻井宝生 Task.28　終了-->
 								<!--
 								<td class="w70">
 									<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"
@@ -95,7 +96,7 @@
 											th:selected="${minuteTime.key == dailyAttendanceForm.trainingEndTimeMinute}">[[${minuteTime.value}]]</option>
 									</select>
 								</td>
-								<!--Task.26 終了-->
+								<!--櫻井宝生 - Task.26 終了-->
 								<td class="w100">
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
 										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inlne="text" class="form-control" 
@@ -120,11 +121,14 @@
 						<input type="submit" value="戻る" name="indexCompany" class="btn btn-default" />
 					</th:block>
 					<input type="submit" value="更新" name="complete" class="btn btn-info"/>
+					<!-- 櫻井宝生 - Task.27 開始-->
 					<script>
 						function checkUpdate(){
 							var res = confirm("更新します。よろしいですか?");
 							return res;
 						}
+					//櫻井宝生 - Task.27 終了
+					//櫻井宝生 - Task.28 開始
 						function setTime(button){
 							var getNum = button.closest('tr').getAttribute('data-index');
 							var getTime = document.getElementById("startTimeHour"+getNum);
@@ -140,6 +144,7 @@
 							getTime.value = 0;
 						}
 					</script>
+					<!-- 櫻井宝生 - Task.27 終了-->
 				</div>
 
 			</form>
