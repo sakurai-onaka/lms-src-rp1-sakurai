@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
+import jp.co.sss.lms.form.AttendanceCheckForm;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.Constants;
+import jp.co.sss.lms.util.LoginUserUtil;
 
 /**
  * 勤怠管理コントローラ
@@ -29,6 +31,8 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+	@Autowired
+	private LoginUserUtil loginUserUtil;
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -40,15 +44,19 @@ public class AttendanceController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(path = "/detail", method = RequestMethod.GET)
-	public String index(Model model) {
-
-		// 櫻井宝生 – Task.25　
-		boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
-		model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
-
+	public String index(Model model, Integer lmsUserId, Integer courseId) {
+		// 櫻井宝生 – Task.57
+		if (loginUserUtil.isStudent()) {
+			// 櫻井宝生 – Task.25　
+			boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
+			model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
+			courseId = loginUserDto.getCourseId();
+			lmsUserId = loginUserDto.getLmsUserId();
+		}
 		// 勤怠一覧の取得
+		// 櫻井宝生 – Task.57
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
-				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
+				.getAttendanceManagement(courseId, lmsUserId);
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		return "attendance/detail";
 	}
@@ -159,7 +167,36 @@ public class AttendanceController {
 
 			return "attendance/update";
 		}
-
 	}
 
+	/**
+	 * 勤怠管理画面 初期表示
+	 * @param model
+	 * @return 勤怠管理画面
+	 * @author 櫻井宝生 - Task.57
+	 */
+	@RequestMapping(path = "/list", method = RequestMethod.GET)
+	public String list(Model model) {
+
+		AttendanceCheckForm attendanceCheckForm = studentAttendanceService
+				.setAttendanceCheckForm();
+		model.addAttribute("attendanceCheckForm", attendanceCheckForm);
+		return "attendance/list";
+	}
+
+	/**
+	 * 勤怠管理画面 初期表示
+	 * @param model
+	 * @return 勤怠管理画面
+	 * @author 櫻井宝生 - Task.57
+	 */
+	@RequestMapping(path = "/list", method = RequestMethod.POST)
+	public String searchAtt(Model model) {
+
+		AttendanceCheckForm attendanceCheckForm = studentAttendanceService
+				.setAttendanceCheckForm();
+		model.addAttribute("attendanceCheckForm", attendanceCheckForm);
+		return "attendance/list";
+	}
+	
 }

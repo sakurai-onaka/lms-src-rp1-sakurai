@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{/common/layout :: layout(~{::title},~{::body/content()})}">
+<head>
+<meta charset="utf-8">
+<title>過去契約一覧 | LMS</title>
+</head>
+
+<body>
+
+	<h2>勤怠情報確認<small>（受講生一覧）</small></h2>
+		<div class="well bs-component">
+            <form name="attendance_listActionForm" method="post" th:action="@{/attendance/list}"
+              class="form-horizontal">
+              <div><input type="hidden" name="org.apache.struts.taglib.html.TOKEN" value="q"></div>
+              <fieldset>
+                <legend>検索</legend>
+                <div class="form-group"> <label for="userName" class="col-lg-2 control-label">コース名</label>
+                  <div class="col-lg-10"> <input type="text" name="courseName" value="" id="userName"
+                      class="form-control"> </div>
+                </div>
+                 <div class="form-group"> <label for="userName" class="col-lg-2 control-label">会場名</label>
+                  <div class="col-lg-10"> <input type="text" th:name="|attendanceCheckForm.mPlace.placeName|" 
+                  th:value="${attendanceCheckForm.mPlace.placeName}" class="form-control" disabled="false"></input></div>
+                </div>
+                <div class="form-group"> <label for="userName" class="col-lg-2 control-label">企業名</label>
+                  <div class="col-lg-10"> <input type="text" name="companyName" value="" id="userName"
+                      class="form-control"> </div>
+                </div>
+                <div class="form-group"> <label for="userName" class="col-lg-2 control-label">ユーザー名</label>
+                  <div class="col-lg-10"> <input type="text" name="userName" value="" id="userName"
+                      class="form-control"> </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-lg-10 col-lg-offset-2"> <input type="submit" name="search" value="検索"
+                      class="btn btn-primary"> </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+	<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+		<div class="row">
+			<div class="col-sm-12">
+				<table class="table table-hover sortabletable dataTable no-footer"
+					id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr role="row">
+							<th class="sorting_asc" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-sort="ascending" aria-label="ユーザーID: activate to sort column descending">ユーザーID</th>
+							<th class="sorting" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-label="ユーザー名: activate to sort column ascending">ユーザー名</th>
+							<th class="sorting" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-label="コース名: activate to sort column ascending">コース名</th>
+							<th class="sorting" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-label="企業名: activate to sort column ascending">企業名</th>
+							<th class="sorting" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-label="会場: activate to sort column ascending">会場</th>
+							<th class="sorting" tabindex="0" aria-controls="user-table" rowspan="1" colspan="1"
+								aria-label="編集: activate to sort column ascending">編集</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="agreementConsentDto : ${agreementConsentDtoList}" role="row" th:object="${agreementConsentDto}">
+							<td class="sorting_1">[[*{#dates.format(contractDate, 'yyyy年MM月dd日')}]]</td>
+							<td>[[*{courseName}]]</td>
+							<td>[[*{#dates.format(contractStartDate, 'yyyy年MM月dd日')}]] 
+								～ [[*{#dates.format(contractEndDate, 'yyyy年MM月dd日')}]]</td>
+							<td>
+								<form th:action="@{/contract/history/detail}" method="post">
+									<input type="submit" value="確認" class="btn btn-default" />
+									<input type="hidden" name="agreementConsentId" th:value="*{agreementConsentId}" />
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

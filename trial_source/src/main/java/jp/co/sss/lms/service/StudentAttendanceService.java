@@ -13,8 +13,12 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.entity.TStudentAttendance;
 import jp.co.sss.lms.enums.AttendanceStatusEnum;
+import jp.co.sss.lms.form.AttendanceCheckForm;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.form.DailyAttendanceForm;
+import jp.co.sss.lms.mapper.MCompanyMapper;
+import jp.co.sss.lms.mapper.MCourseMapper;
+import jp.co.sss.lms.mapper.MPlaceMapper;
 import jp.co.sss.lms.mapper.TStudentAttendanceMapper;
 import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
@@ -43,6 +47,12 @@ public class StudentAttendanceService {
 	private LoginUserDto loginUserDto;
 	@Autowired
 	private TStudentAttendanceMapper tStudentAttendanceMapper;
+	@Autowired
+	private MCourseMapper mCourseMapper;
+	@Autowired
+	private MPlaceMapper mPlaceMapper;
+	@Autowired
+	private MCompanyMapper mCompanyMapper;
 
 	/**
 	 * 勤怠一覧情報取得
@@ -466,5 +476,22 @@ public class StudentAttendanceService {
 			}
 		}
 		return errors;
+	}
+
+	/**
+	 * 勤怠フォームへ設定
+	 * 
+	 * @param attendanceManagementDtoList
+	 * @return 勤怠編集フォーム
+	 * @author 櫻井宝生 - Task.57
+	 */
+	public AttendanceCheckForm setAttendanceCheckForm() {
+		AttendanceCheckForm attendanceCheckForm = new AttendanceCheckForm();
+		attendanceCheckForm.setCourseDtoList(
+				mCourseMapper.getCourseDtoList(Constants.DB_HIDDEN_FLG_FALSE, Constants.DB_FLG_FALSE));
+		attendanceCheckForm.setMPlace(mPlaceMapper.findByPlaceId(loginUserDto.getPlaceId(), Constants.DB_FLG_FALSE));
+		attendanceCheckForm.setCompanyDto(mCompanyMapper.getCompanyDto(Constants.DB_FLG_FALSE));
+
+		return attendanceCheckForm;
 	}
 }
