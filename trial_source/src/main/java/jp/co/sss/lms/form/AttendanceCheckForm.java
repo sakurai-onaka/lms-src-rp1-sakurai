@@ -21,4 +21,6 @@ public class AttendanceCheckForm {
 	MPlace mPlace;
 	/** 企業DTOリスト */
 	List<CompanyDto> companyDto;
+	/** 勤怠情報確認（受講生一覧）画面入力情報 */
+	AttendanceListForm attendanceListForm;
 }

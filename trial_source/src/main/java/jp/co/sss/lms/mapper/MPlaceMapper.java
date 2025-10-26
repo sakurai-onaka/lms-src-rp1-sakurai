@@ -10,8 +10,8 @@ public interface MPlaceMapper {
 	
 	/**
 	 * 会場リスト
+	 * @param placeId
 	 * @param hiddenFlg
-	 * @param deleteFlg
 	 * @return 会場リスト
 	 */
 	MPlace findByPlaceId(@Param("placeId") Integer placeId,

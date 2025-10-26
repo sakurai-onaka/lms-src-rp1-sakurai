@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
+import jp.co.sss.lms.dto.UserDetailDto;
 import jp.co.sss.lms.form.AttendanceCheckForm;
 import jp.co.sss.lms.form.AttendanceForm;
+import jp.co.sss.lms.form.AttendanceListForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.Constants;
 import jp.co.sss.lms.util.LoginUserUtil;
@@ -48,8 +50,8 @@ public class AttendanceController {
 		// 櫻井宝生 – Task.57
 		if (loginUserUtil.isStudent()) {
 			// 櫻井宝生 – Task.25　
-			boolean noInputPastDaysFlg = studentAttendanceService.pastDaysCheck();
-			model.addAttribute("noInputPastDaysFlg", noInputPastDaysFlg);
+			boolean notInputFlg = studentAttendanceService.pastDaysCheck();
+			model.addAttribute("noInputPastDaysFlg", notInputFlg);
 			courseId = loginUserDto.getCourseId();
 			lmsUserId = loginUserDto.getLmsUserId();
 		}
@@ -176,10 +178,12 @@ public class AttendanceController {
 	 * @author 櫻井宝生 - Task.57
 	 */
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
-	public String list(Model model) {
+	public String list(Model model, AttendanceListForm attendanceListForm) {
 
+		// 検索フォームの生成
 		AttendanceCheckForm attendanceCheckForm = studentAttendanceService
-				.setAttendanceCheckForm();
+				.setAttendanceCheckFormInput();
+		attendanceCheckForm.setAttendanceListForm(attendanceListForm);
 		model.addAttribute("attendanceCheckForm", attendanceCheckForm);
 		return "attendance/list";
 	}
@@ -187,16 +191,24 @@ public class AttendanceController {
 	/**
 	 * 勤怠管理画面 初期表示
 	 * @param model
+	 * @param attendanceListForm
 	 * @return 勤怠管理画面
 	 * @author 櫻井宝生 - Task.57
 	 */
 	@RequestMapping(path = "/list", method = RequestMethod.POST)
-	public String searchAtt(Model model) {
-
+	public String searchAtt(Model model, AttendanceListForm attendanceListForm) {
+		// 検索フォームの生成
 		AttendanceCheckForm attendanceCheckForm = studentAttendanceService
-				.setAttendanceCheckForm();
+				.setAttendanceCheckFormInput();
+		//検索
+		List<UserDetailDto> lmsUserDtoList = studentAttendanceService.getLmsUsers(attendanceListForm.getCourseName(),
+				attendanceListForm.getCompanyName(), attendanceListForm.getUserName(),
+				attendanceCheckForm.getMPlace().getPlaceId(), Constants.CODE_VAL_ROLL_STUDENT);
+
+		attendanceCheckForm.setAttendanceListForm(attendanceListForm);
 		model.addAttribute("attendanceCheckForm", attendanceCheckForm);
+		model.addAttribute("lmsUserDtoList", lmsUserDtoList);
 		return "attendance/list";
 	}
-	
+
 }

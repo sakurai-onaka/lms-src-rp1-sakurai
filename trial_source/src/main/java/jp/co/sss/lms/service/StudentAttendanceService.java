@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
+import jp.co.sss.lms.dto.UserDetailDto;
 import jp.co.sss.lms.entity.TStudentAttendance;
 import jp.co.sss.lms.enums.AttendanceStatusEnum;
 import jp.co.sss.lms.form.AttendanceCheckForm;
@@ -18,6 +19,7 @@ import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.form.DailyAttendanceForm;
 import jp.co.sss.lms.mapper.MCompanyMapper;
 import jp.co.sss.lms.mapper.MCourseMapper;
+import jp.co.sss.lms.mapper.MLmsUserMapper;
 import jp.co.sss.lms.mapper.MPlaceMapper;
 import jp.co.sss.lms.mapper.TStudentAttendanceMapper;
 import jp.co.sss.lms.util.AttendanceUtil;
@@ -53,6 +55,8 @@ public class StudentAttendanceService {
 	private MPlaceMapper mPlaceMapper;
 	@Autowired
 	private MCompanyMapper mCompanyMapper;
+	@Autowired
+	private MLmsUserMapper mLmsUserMapper;
 
 	/**
 	 * 勤怠一覧情報取得
@@ -376,14 +380,11 @@ public class StudentAttendanceService {
 	 */
 	public boolean pastDaysCheck() {
 		Date trainingDate = attendanceUtil.getTrainingDate();
-		if (loginUserUtil.isStudent()) {
 			Integer notInputAttDateConut = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
 					Constants.DB_FLG_FALSE, trainingDate);
 			if (notInputAttDateConut > 0) {
 				return true;
 			}
-		}
-
 		return false;
 	}
 
@@ -481,11 +482,10 @@ public class StudentAttendanceService {
 	/**
 	 * 勤怠フォームへ設定
 	 * 
-	 * @param attendanceManagementDtoList
 	 * @return 勤怠編集フォーム
 	 * @author 櫻井宝生 - Task.57
 	 */
-	public AttendanceCheckForm setAttendanceCheckForm() {
+	public AttendanceCheckForm setAttendanceCheckFormInput() {
 		AttendanceCheckForm attendanceCheckForm = new AttendanceCheckForm();
 		attendanceCheckForm.setCourseDtoList(
 				mCourseMapper.getCourseDtoList(Constants.DB_HIDDEN_FLG_FALSE, Constants.DB_FLG_FALSE));
@@ -493,5 +493,25 @@ public class StudentAttendanceService {
 		attendanceCheckForm.setCompanyDto(mCompanyMapper.getCompanyDto(Constants.DB_FLG_FALSE));
 
 		return attendanceCheckForm;
+	}
+
+	/**
+	 * 勤怠情報確認（受講生一覧）画面検索
+	 * 
+	 * @param courseName
+	 * @param companyName
+	 * @param userName
+	 * @param mPlace
+	 * @param role
+	 * @return ユーザー詳細DTOリスト
+	 * @author 櫻井宝生 - Task.57
+	 */
+	public List<UserDetailDto> getLmsUsers(String courseName, String companyName, String userName, Integer placeId,
+			String role) {
+		// 勤怠管理リストの取得
+		List<UserDetailDto> lmsUserDtoList = mLmsUserMapper.getUserDetailForSearch(courseName, companyName, userName,
+				placeId, role, Constants.DB_FLG_FALSE);
+
+		return lmsUserDtoList;
 	}
 }

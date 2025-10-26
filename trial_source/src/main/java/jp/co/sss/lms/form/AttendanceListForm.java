@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class AttendanceListForm {
 
-	/** コースDTOリスト */
+	/** コース名 */
 	String courseName;
-	/** コースDTOリスト */
+	/** 企業名 */
 	String companyName;
-	/** コースDTOリスト */
+	/** ユーザー名 */
 	String userName;
 	
 }
