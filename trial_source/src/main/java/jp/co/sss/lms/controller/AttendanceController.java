@@ -174,9 +174,9 @@ public class AttendanceController {
 
 	/**
 	 * 勤怠管理画面 初期表示
+	 * @author 櫻井宝生 - Task.57
 	 * @param model
 	 * @return 勤怠管理画面
-	 * @author 櫻井宝生 - Task.57
 	 */
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
 	public String list(Model model, AttendanceListForm attendanceListForm) {
@@ -190,11 +190,11 @@ public class AttendanceController {
 	}
 
 	/**
-	 * 勤怠管理画面 初期表示
+	 * 勤怠管理画面 検索処理
+	 * @author 櫻井宝生 - Task.57
 	 * @param model
 	 * @param attendanceListForm
 	 * @return 勤怠管理画面
-	 * @author 櫻井宝生 - Task.57
 	 */
 	@RequestMapping(path = "/list", method = RequestMethod.POST)
 	public String searchAtt(Model model, AttendanceListForm attendanceListForm) {
@@ -214,9 +214,9 @@ public class AttendanceController {
 
 	/**
 	 * 勤怠管理画面 初期表示
+	 * @author 櫻井宝生 - Task.58
 	 * @param model
 	 * @return 勤怠一括登録
-	 * @author 櫻井宝生 - Task.58
 	 */
 	@RequestMapping(path = "/bulkRegist", method = RequestMethod.GET)
 	public String bulkRegist(Model model) {
@@ -228,9 +228,9 @@ public class AttendanceController {
 	
 	/**
 	 * 勤怠管理画面 『検索』ボタン押下
+	 * @author 櫻井宝生 - Task.58
 	 * @param model
 	 * @return 勤怠一括登録
-	 * @author 櫻井宝生 - Task.58
 	 */
 	@RequestMapping(path = "/bulkRegist/search", method = RequestMethod.POST)
 	public String bulkRegist(Model model,AttendanceBulkForm attendanceBulkForm) {

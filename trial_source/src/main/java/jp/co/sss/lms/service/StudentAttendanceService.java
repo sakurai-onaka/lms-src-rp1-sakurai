@@ -377,8 +377,8 @@ public class StudentAttendanceService {
 
 	/**
 	 * 過去日の未入力チェック
-	 * @return 過去日未入力判定結果
 	 * @author 櫻井宝生  – 櫻井宝生 - Task.25
+	 * @return 過去日未入力判定結果
 	 */
 	public boolean pastDaysCheck() {
 		Date trainingDate = attendanceUtil.getTrainingDate();
@@ -392,8 +392,8 @@ public class StudentAttendanceService {
 
 	/**
 	 * 入力チェック
-	 * @return エラーメッセージ
 	 * @author 櫻井宝生 - Task.27
+	 * @return エラーメッセージ
 	 */
 	public List<String> inputCheck(AttendanceForm attendanceForm) {
 		//該当の勤怠リスト[n]のnの部分
@@ -484,8 +484,8 @@ public class StudentAttendanceService {
 	/**
 	 * 勤怠フォームへ設定
 	 * 
-	 * @return 勤怠編集フォーム
 	 * @author 櫻井宝生 - Task.57
+	 * @return 勤怠編集フォーム
 	 */
 	public AttendanceCheckForm setAttendanceCheckFormInput() {
 		AttendanceCheckForm attendanceCheckForm = new AttendanceCheckForm();
@@ -500,13 +500,13 @@ public class StudentAttendanceService {
 	/**
 	 * 勤怠情報確認（受講生一覧）画面検索
 	 * 
+	 * @author 櫻井宝生 - Task.57
 	 * @param courseName
 	 * @param companyName
 	 * @param userName
 	 * @param mPlace
 	 * @param role
 	 * @return ユーザー詳細DTOリスト
-	 * @author 櫻井宝生 - Task.57
 	 */
 	public List<UserDetailDto> getLmsUsers(String courseName, String companyName, String userName, Integer placeId,
 			String role) {
@@ -552,8 +552,8 @@ public class StudentAttendanceService {
 
 	/**
 	 * 勤怠管理画面 検索入力チェック
-	 * @return エラーメッセージ
 	 * @author 櫻井宝生 - Task.58
+	 * @return エラーメッセージ
 	 */
 	public String searchValueCheck(AttendanceBulkForm attendanceBulkForm) {
 		//本日の日付取得

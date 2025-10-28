@@ -28,6 +28,7 @@ public interface MLmsUserMapper {
 	/**
 	 * ユーザー基本情報取得(検索)
 	 * 
+	 * @author 櫻井宝生 - Task.57
 	 * @param courseName
 	 * @param companyName
 	 * @param userName
@@ -35,7 +36,6 @@ public interface MLmsUserMapper {
 	 * @param role
 	 * @param deleteFlg
 	 * @return ユーザー基本情報DTO
-	 * @author 櫻井宝生 - Task.57
 	 */
 	List<UserDetailDto> getUserDetailForSearch(@Param("courseName") String courseName,
 			@Param("companyName") String companyName, @Param("userName") String userName,

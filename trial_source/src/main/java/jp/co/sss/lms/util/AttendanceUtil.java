@@ -134,8 +134,8 @@ public class AttendanceUtil {
 
 	/**
 	 * 勤怠管理画面「時」取得
-	 * @return 「時」
 	 * @author 櫻井宝生 - Task.26
+	 * @return 「時」
 	 */
 	public LinkedHashMap<Integer, String> getHourMap() {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
@@ -154,8 +154,8 @@ public class AttendanceUtil {
 
 	/**
 	 * 勤怠管理画面「分」取得
-	 * @return 「分」
 	 * @author 櫻井宝生 - Task.26
+	 * @return 「分」
 	 */
 	public LinkedHashMap<Integer, String> getMinuteMap() {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
@@ -174,10 +174,10 @@ public class AttendanceUtil {
 
 	/**
 	 * 出退勤時間を元に「時」「分」を出力する。
+	 * @author 櫻井宝生 - Task.26
 	 * @param trainingTime 時刻
 	 * @param numberType true 時 false 分
 	 * @return 抽出した「時」もしくは「分」
-	 * @author 櫻井宝生 - Task.26
 	 */
 	public Integer getHour(String trainingTime) {
 		Integer time;
@@ -197,10 +197,10 @@ public class AttendanceUtil {
 
 	/**
 	 * 出退勤時間を元に「時」「分」を出力する。
+	 * @author 櫻井宝生 - Task.26
 	 * @param trainingTime 時刻
 	 * @param numberType true 時 false 分
 	 * @return 抽出した「時」もしくは「分」
-	 * @author 櫻井宝生 - Task.26
 	 */
 	public Integer getMinute(String trainingTime) {
 		Integer time;
@@ -235,10 +235,10 @@ public class AttendanceUtil {
 	
 	/**
 	 * 受講時間数を算出
+	 * @author 櫻井宝生 - Task.27
 	 * @param startTrainingTime
 	 * @param endTrainingTime
 	 * @return TrainingTime
-	 * @author 櫻井宝生 - Task.27
 	 */
 	public TrainingTime calcJukoTime(TrainingTime startTrainingTime, TrainingTime endTrainingTime) {
 		//出退勤合計分取得
