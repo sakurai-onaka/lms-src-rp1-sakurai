@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.dto.UserDetailDto;
+import jp.co.sss.lms.entity.MPlace;
 import jp.co.sss.lms.entity.TStudentAttendance;
 import jp.co.sss.lms.enums.AttendanceStatusEnum;
+import jp.co.sss.lms.form.AttendanceBulkForm;
 import jp.co.sss.lms.form.AttendanceCheckForm;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.form.DailyAttendanceForm;
@@ -380,11 +382,11 @@ public class StudentAttendanceService {
 	 */
 	public boolean pastDaysCheck() {
 		Date trainingDate = attendanceUtil.getTrainingDate();
-			Integer notInputAttDateConut = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
-					Constants.DB_FLG_FALSE, trainingDate);
-			if (notInputAttDateConut > 0) {
-				return true;
-			}
+		Integer notInputAttDateConut = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
+				Constants.DB_FLG_FALSE, trainingDate);
+		if (notInputAttDateConut > 0) {
+			return true;
+		}
 		return false;
 	}
 
@@ -513,5 +515,65 @@ public class StudentAttendanceService {
 				placeId, role, Constants.DB_FLG_FALSE);
 
 		return lmsUserDtoList;
+	}
+
+	/**
+	 * 会場DTOの取得
+	 * 
+	 * @author 櫻井宝生 - Task.58
+	 * @return 勤怠編集フォーム
+	 * 
+	 */
+	public String getClassName() {
+		MPlace mPlace = mPlaceMapper.findByPlaceId(loginUserDto.getPlaceId(), Constants.DB_FLG_FALSE);
+		//&が存在するか確認
+		int startIndex = mPlace.getPlaceNote().indexOf("$");
+		if (startIndex == -1) {
+			startIndex = mPlace.getPlaceNote().indexOf("＄");
+			if (startIndex == -1) {
+				return null;
+			}
+		}
+		String className = mPlace.getPlaceNote().substring(startIndex + 1);
+
+		//)または）が存在するか確認
+		int endIndex = mPlace.getPlaceNote().indexOf("$");
+		if (endIndex == -1) {
+			endIndex = mPlace.getPlaceNote().indexOf("＄");
+			if (endIndex == -1) {
+				return null;
+			}
+		}
+
+		className = className.substring(0, endIndex);
+		className = mPlace.getPlaceName() + "（" + className + "）";
+		return className;
+	}
+
+	/**
+	 * 勤怠管理画面 検索入力チェック
+	 * @return エラーメッセージ
+	 * @author 櫻井宝生 - Task.58
+	 */
+	public String searchValueCheck(AttendanceBulkForm attendanceBulkForm) {
+		//本日の日付取得
+		Date trainingDate = attendanceUtil.getTrainingDate();
+		//期間(To)が期間(From)より過去日の場合
+		if (attendanceBulkForm.getSearchPeriodTo().after(trainingDate)) {
+			return messageUtil.getMessage(Constants.VALID_KEY_SEARCHTORANGEERROR);
+		}
+		//期間(To)が現在日付より未来の場合
+		if (attendanceBulkForm.getSearchPeriodFrom().after(attendanceBulkForm.getSearchPeriodTo())) {
+			return messageUtil.getMessage(Constants.VALID_KEY_SEARCHPERIODCOMPAREERROR);
+		}
+		
+		//期間(From)　～　期間(To)の日数　＞　30日の場合
+		Integer difDays = dateUtil.differenceDays(attendanceBulkForm.getSearchPeriodTo(),attendanceBulkForm.getSearchPeriodFrom());
+		Integer thirtieth = 1000 * 30 * 24 * 60 * 60;
+		if(difDays >thirtieth) {
+			return messageUtil.getMessage(Constants.VALID_KEY_SEARCHSETTINGOVER);
+		}
+		
+		return null;
 	}
 }

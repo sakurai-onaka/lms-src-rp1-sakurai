@@ -248,6 +248,10 @@ public class LoginSessionFilter implements Filter {
 		teacherAcessList.add("/lms/attendance/list");
 		teacherAcessList.add("/lms/attendance/detail");
 		teacherAcessList.add("/lms/attendance/bulkRegist");
+		// 櫻井宝生 - Task58追加
+		teacherAcessList.add("/lms/attendance/bulkRegist/search");
+		teacherAcessList.add("/lms/attendance/bulkRegist/complete");
+		// 櫻井宝生 - Task58追加
 		teacherAcessList.add("/lms/attendance/update");
 		teacherAcessList.add("/lms/attendance/updateAdmin");
 		teacherAcessList.add("/lms/evReport/score");

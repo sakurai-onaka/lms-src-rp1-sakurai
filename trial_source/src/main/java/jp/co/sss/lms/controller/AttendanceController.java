@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.dto.UserDetailDto;
+import jp.co.sss.lms.form.AttendanceBulkForm;
 import jp.co.sss.lms.form.AttendanceCheckForm;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.form.AttendanceListForm;
@@ -209,6 +210,40 @@ public class AttendanceController {
 		model.addAttribute("attendanceCheckForm", attendanceCheckForm);
 		model.addAttribute("lmsUserDtoList", lmsUserDtoList);
 		return "attendance/list";
+	}
+
+	/**
+	 * 勤怠管理画面 初期表示
+	 * @param model
+	 * @return 勤怠一括登録
+	 * @author 櫻井宝生 - Task.58
+	 */
+	@RequestMapping(path = "/bulkRegist", method = RequestMethod.GET)
+	public String bulkRegist(Model model) {
+		// 検索フォームの生成
+		String className = studentAttendanceService.getClassName();
+		model.addAttribute("className", className);
+		return "attendance/bulkRegist";
+	}
+	
+	/**
+	 * 勤怠管理画面 『検索』ボタン押下
+	 * @param model
+	 * @return 勤怠一括登録
+	 * @author 櫻井宝生 - Task.58
+	 */
+	@RequestMapping(path = "/bulkRegist/search", method = RequestMethod.POST)
+	public String bulkRegist(Model model,AttendanceBulkForm attendanceBulkForm) {
+		//入力チェック
+		String error = studentAttendanceService.searchValueCheck(attendanceBulkForm);
+		if(error != null) {
+			model.addAttribute(error);
+			return "attendance/bulkRegist";
+		}
+		// 検索フォームの生成
+		String className = studentAttendanceService.getClassName();
+		model.addAttribute("className", className);
+		return "attendance/bulkRegist";
 	}
 
 }

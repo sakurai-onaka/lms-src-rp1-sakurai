@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{/common/layout :: layout(~{::title},~{::body/content()})}">
+<head>
+<meta charset="UTF-8">
+<title>勤怠情報変更｜LMS</title>
+</head>
+<body>
+	<div class="container">
+      <div id="contents" class="clearfix">
+        <div id="main" class="main2clm">
+          <h2>勤怠一括登録</h2>
+
+          <form name="attendance_bulkRegist_listActionForm" method="post" th:action="@{/attendance/bulkRegist/complete}"
+            class="form-horizontal">
+            <div>
+              <input type="hidden" name="org.apache.struts.taglib.html.TOKEN"
+                value="c561a5fd29ca16c8536bb77fad2738bc" />
+            </div>
+            <div class="well bs-component">
+              <fieldset>
+                <legend>検索</legend>
+                <div class="form-group">
+                  <label for="placeName" class="col-lg-2 control-label">期間</label>
+                  <div class="col-lg-10 form-inline">
+                    <input type="text" name="searchPeriodFrom" value="" id="searchFrom" style="width: 10em"
+                      class="form-control datepickerFrom" />　～　
+                    <input type="text" name="searchPeriodTo" value="" id="searchTo" style="width: 10em"
+                      class="form-control datepickerTo" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="placeName" class="col-lg-2 control-label">会場名</label>
+                  <div class="col-lg-10">
+                    <select name="placeId" th:each="name:${className}" id="placeId" class="form-control">
+                      <option value=""></option>
+
+                      <option th:text="${name}" th:value="${name}"></option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-lg-10 col-lg-offset-2">
+                    <input type="submit" name="search" value="検索" class="btn btn-primary" />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+        </div>
+        <!--#main-->
+      </div>
+      <!--#contents-->
+      <form id="screenTransForm" name="screenTransForm" method="post"></form>
+      <div id="push"></div>
+    </div>
+  </div>
+  <!--#container-->
+</body>
+</html>
